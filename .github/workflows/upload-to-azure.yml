@@ -62,6 +62,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Troubleshooting Secrets
+        run: |
+          echo "Checking Client ID..."
+          if [ -z "${{ secrets.AZURE_CLIENT_ID }}" ]; then echo "MISSING: AZURE_CLIENT_ID"; fi
+          echo "Checking Tenant ID..."
+          if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then echo "MISSING: AZURE_TENANT_ID"; fi
+          echo "Checking Subscription ID..."
+          if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then echo "MISSING: AZURE_SUBSCRIPTION_ID"; fi
+
+
       # - name: Check secret presence
       #   run: |
       #     if [ -z "${{ secrets.AZURE_CLIENT_ID }}" ]; then echo "AZURE_CLIENT_ID is EMPTY"; exit 1; fi
