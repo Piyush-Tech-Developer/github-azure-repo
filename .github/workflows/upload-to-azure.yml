@@ -15,6 +15,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Check secret presence
+        run: |
+          if [ -n "${{ secrets.AZURE_CLIENT_ID }} ]; then echo "Client ID is EMPTY"; fi
+          if [ -n "${{ secrets.AZURE_TENANT_ID }} ]; then echo "Tenant ID is EMPTY"; fi
+
       - name: Azure Login
         uses: azure/login@v2
         with:
