@@ -62,11 +62,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check secret presence
-        run: |
-          if [ -z "${{ secrets.AZURE_CLIENT_ID }}" ]; then echo "AZURE_CLIENT_ID is EMPTY"; exit 1; fi
-          if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then echo "AZURE_TENANT_ID is EMPTY"; exit 1; fi
-          if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then echo "AZURE_SUBSCRIPTION_ID is EMPTY"; exit 1; fi
+      # - name: Check secret presence
+      #   run: |
+      #     if [ -z "${{ secrets.AZURE_CLIENT_ID }}" ]; then echo "AZURE_CLIENT_ID is EMPTY"; exit 1; fi
+      #     if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then echo "AZURE_TENANT_ID is EMPTY"; exit 1; fi
+      #     if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then echo "AZURE_SUBSCRIPTION_ID is EMPTY"; exit 1; fi
 
       - name: Azure Login
         uses: azure/login@v2
