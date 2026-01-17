@@ -45,24 +45,44 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Get Storage Key from Key Vault
-        uses: Azure/get-keyvault-secrets@v1
-        with:
-          keyvault: "blob-storage-credentials"
-          secrets: "StorageKey"
-        id: kv
+      # - name: Get Storage Key from Key Vault
+      #   uses: Azure/get-keyvault-secrets@v1
+      #   with:
+      #     keyvault: "blob-storage-credentials"
+      #     secrets: "StorageKey"
+      #   id: kv
 
-      - name: Upload file to Blob Storage
+      # - name: Upload file to Blob Storage
+      #   uses: azure/CLI@v2
+      #   env:
+      #     StorageKeyEnv: ${{ steps.kv.outputs.StorageKey }}
+      #   with:
+      #     inlineScript: |
+      #       az storage blob upload \
+      #         --account-name git1storage \
+      #         --account-key "$StorageKeyEnv" \
+      #         --container-name "github-uploads" \
+      #         --file ./code.java \
+      #         --name code.java \
+      #         --overwrite true
+
+      - name: Fetch Secret and Upload
         uses: azure/CLI@v2
-        env:
-          StorageKeyEnv: ${{ steps.kv.outputs.StorageKey }}
         with:
           inlineScript: |
+            # 1. Fetch secret directly into a variable
+            STORAGE_KEY=$(az keyvault secret show --name "StorageKey" --vault-name "blob-storage-credentials" --query value -o tsv)
+            
+            # 2. Mask the secret so it doesn't show in logs
+            echo "::add-mask::$STORAGE_KEY"
+            
+            # 3. Perform the upload
             az storage blob upload \
-              --account-name git1storage \
-              --account-key "$StorageKeyEnv" \
+              --account-name "git1storage" \
+              --account-key "$STORAGE_KEY" \
               --container-name "github-uploads" \
-              --file ./code.java \
-              --name code.java \
+              --file "./code.java" \
+              --name "code.java" \
               --overwrite true
+
 
