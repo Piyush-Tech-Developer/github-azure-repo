@@ -105,7 +105,7 @@ jobs:
             az storage blob upload \
               --account-name git1storage \
               --account-key "${{ steps.kv.outputs.StorageKey }}" \
-              --container-name logs \
+              --container-name "$logs" \
               --file ./code.java \
               --name code.java
 
