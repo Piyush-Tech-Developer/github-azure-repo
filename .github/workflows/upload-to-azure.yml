@@ -1,49 +1,3 @@
-# name: Upload to Azure Storage
-
-# on:
-#   push:
-#     branches: [ "main" ]
-
-# permissions: 
-#   id-token: write
-#   contents: read
-
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout Code
-#         uses: actions/checkout@v4
-
-#       - name: Check secret presence
-#         run: |
-#           if [ -n "${{ secrets.AZURE_CLIENT_ID }}" ]; then echo "Client ID is EMPTY"; fi
-#           if [ -n "${{ secrets.AZURE_TENANT_ID }}" ]; then echo "Tenant ID is EMPTY"; fi
-
-#       - name: Azure Login
-#         uses: azure/login@v2
-#         with:
-#           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-#           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-#           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-#       - name: Get Secret from Key Vault
-#         uses: Azure/get-keyvault-secrets@v1
-#         with:
-#           keyvault: "Blob-Storage-Credentials"
-#           secrets: "StorageKey"
-#         id: kvAction
-
-#       - name: Upload to Blob Storage
-#         uses: azure/CLI@v2
-#         with:
-#           inlineScript: |
-#             az storage blob upload-batch \
-#               --account-name "git1storage" \
-#               --account-key "${{ steps.kvAction.outputs.StorageKey }}"
-#               --destination "$logs" \
-#               --source "./code.java"
-
 name: Upload to Azure Storage
 
 on:
@@ -100,11 +54,13 @@ jobs:
 
       - name: Upload file to Blob Storage
         uses: azure/CLI@v2
+        env:
+          StorageKeyEnv: ${{ steps.kv.outputs.StorageKey }}
         with:
           inlineScript: |
             az storage blob upload \
               --account-name git1storage \
-              --account-key "${{ steps.kv.outputs.StorageKey }}" \
+              --account-key "$StorageKeyEnv" \
               --container-name "github-uploads" \
               --file ./code.java \
               --name code.java
