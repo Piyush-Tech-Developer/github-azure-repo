@@ -71,6 +71,12 @@ jobs:
           echo "Checking Subscription ID..."
           if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then echo "MISSING: AZURE_SUBSCRIPTION_ID"; fi
 
+      - name: Hard Debug Secrets
+        run: |
+          echo "Total Repository Secrets: $(env | grep -c 'AZURE_')" # This should be > 0
+          [ -n "${{ secrets.AZURE_CLIENT_ID }}" ] && echo "Client ID Found" || echo "Client ID is MISSING"
+
+
 
       # - name: Check secret presence
       #   run: |
