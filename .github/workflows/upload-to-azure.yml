@@ -63,6 +63,6 @@ jobs:
               --account-key "$StorageKeyEnv" \
               --container-name "github-uploads" \
               --file ./code.java \
-              --name code.java
+              --name code.java \
               --overwrite true
 
